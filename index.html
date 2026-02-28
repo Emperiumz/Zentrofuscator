@@ -3,123 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZENTROFUSCATOR | Premium</title>
+    <title>ZENTROFUSCATOR | PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fengari/0.1.4/fengari-web.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&display=swap');
-        /* Fixes the scrolling issue */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap');
+        
+        /* FULL SCREEN LOCK (Stops all scrolling) */
         html, body { 
-            height: 100%; 
-            width: 100%; 
+            position: fixed; 
+            overflow: hidden; 
+            width: 100vw; 
+            height: 100vh; 
             margin: 0; 
-            padding: 0; 
-            overflow: hidden; /* Stops left-right / up-down scrolling */
-            background-color: #020202;
+            padding: 0;
+            background: #020202;
             font-family: 'Plus Jakarta Sans', sans-serif;
+            touch-action: none;
         }
-        .glass { background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border-radius: 2rem; }
-        .neon-accent { color: #ff0055; text-shadow: 0 0 15px rgba(255, 0, 85, 0.5); }
-        input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 20; }
+
+        .glass { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(25px); border-radius: 2rem; }
+        .neon { color: #ff0055; text-shadow: 0 0 20px rgba(255, 0, 85, 0.3); }
+        input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 50; }
+        .btn-glow { background: #ff0055; box-shadow: 0 0 20px rgba(255, 0, 85, 0.2); }
     </style>
 </head>
-<body class="flex items-center justify-center p-4">
+<body class="flex items-center justify-center">
 
-    <div class="fixed inset-0 -z-10">
-        <div class="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-[#ff00550a] blur-[100px]"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-[#ff005505] blur-[100px]"></div>
-    </div>
-
-    <main class="w-full max-w-lg space-y-6">
+    <div class="w-full max-w-md p-6 space-y-8 animate-in fade-in duration-500">
         <div class="text-center">
-            <h1 class="text-4xl md:text-6xl font-black tracking-tighter italic uppercase">
-                ZENTRO<span class="neon-accent not-italic">FUSCATOR</span>
+            <h1 class="text-5xl font-black tracking-tighter italic uppercase">
+                ZENTRO<span class="neon not-italic">FUSCATOR</span>
             </h1>
-            <p class="text-gray-500 text-[9px] tracking-[0.4em] uppercase mt-2">v4.0.1 Stable</p>
+            <p class="text-gray-600 text-[10px] tracking-[0.4em] uppercase mt-2 font-bold">Secure Virtualization v4.5</p>
         </div>
 
-        <div class="glass p-8 md:p-10 shadow-2xl relative">
-            <div class="relative border border-white/5 rounded-3xl p-10 text-center bg-white/[0.01] hover:bg-white/[0.03] transition-all">
+        <div class="glass p-8 relative shadow-2xl">
+            <div class="relative border border-white/5 rounded-3xl p-10 text-center bg-white/[0.01] group transition-all">
                 <input type="file" id="fileInput" accept=".lua">
                 <div class="mb-4 inline-flex p-4 rounded-2xl bg-[#ff005510] text-[#ff0055]">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
                 </div>
-                <h2 id="file-name" class="text-lg font-bold">Select Script</h2>
-                <p id="file-info" class="text-gray-500 text-xs mt-1">Tap here to load .lua</p>
+                <h2 id="fileName" class="text-lg font-bold uppercase tracking-tight">Select Script</h2>
+                <p id="fileInfo" class="text-gray-500 text-[10px] uppercase mt-1">Tap to load local file</p>
             </div>
 
-            <button id="obf-btn" disabled class="mt-8 w-full py-4 bg-[#ff0055] rounded-xl font-bold uppercase tracking-widest text-xs text-white disabled:opacity-20 transition-all active:scale-95 shadow-lg shadow-[#ff0055]/20">
+            <button id="obfBtn" disabled class="mt-8 w-full py-5 btn-glow rounded-2xl font-bold uppercase tracking-widest text-xs text-white disabled:opacity-10 transition-all active:scale-95">
                 Deploy Virtualization
             </button>
             
-            <div id="status" class="mt-4 text-[9px] uppercase tracking-widest text-center text-gray-600 font-bold">
+            <div id="status" class="mt-6 text-[9px] uppercase tracking-[0.3em] text-center text-gray-700 font-bold italic">
                 System Standby
             </div>
         </div>
-    </main>
+    </div>
 
-    <script type="application/lua" id="compiler-logic">
+    <script type="application/lua" id="lua-logic">
         function Virtualize(source)
-            local x_key = math.random(1, 255)
-            local function enc(s)
-                local t = {}
-                for i=1, #s do table.insert(t, string.byte(s, i) ~ x_key) end
-                return "{" .. table.concat(t, ",") .. "}"
+            local key = math.random(1, 255)
+            local res = {}
+            for i = 1, #source do
+                res[i] = string.byte(source, i) ~ key
             end
-
-            -- Main VM Data
-            local data = string.format("{o=15,r=1,v=%s},{o=22,r=2,v=%s},{o=37,r=1,a=2}", enc("print"), enc("Protected by Zentrofuscator"))
+            local data = "{" .. table.concat(res, ",") .. "}"
             
-            -- This stub is one long line to make it harder to read
-            local stub = [[local _v={%s}return(function(d,x)local c,e,s=string.char,_ENV or getfenv(),{}local f=function(t)local r=""for i=1,#t do r=r..c(t[i]~x)end return r end for i=1,#d do local n=d[i]if n.o==15 then s[n.r]=e[f(n.v)]elseif n.o==22 then s[n.r]=f(n.v)elseif n.o==37 then s[n.r](s[n.a])end end end)(_v,%d)]]
-            
-            return string.format(stub, data, x_key)
+            return "--[[ Protected by Zentrofuscator Premium ]]\nlocal _d=" .. data .. "\nlocal _k=" .. key .. "\nreturn(function(d,k)local c=string.char;local r='';for i=1,#d do r=r..c(d[i]~k)end;local f=load(r);return f()end)(_d,_k)"
         end
     </script>
 
     <script>
         const input = document.getElementById('fileInput');
-        const btn = document.getElementById('obf-btn');
+        const btn = document.getElementById('obfBtn');
         const status = document.getElementById('status');
-        const fileName = document.getElementById('file-name');
+        const fileName = document.getElementById('fileName');
+
+        // Check if Fengari loaded
+        window.onload = () => {
+            if (typeof fengari === 'undefined') {
+                status.innerText = "CDN ERROR: REFRESH PAGE";
+                status.style.color = "orange";
+            }
+        };
 
         input.onchange = (e) => {
             if (e.target.files[0]) {
-                fileName.innerText = e.target.files[0].name;
+                fileName.innerText = e.target.files[0].name.toUpperCase();
                 btn.disabled = false;
-                status.innerText = "Script Authenticated";
+                status.innerText = "AUTHENTICATED";
                 status.style.color = "#ff0055";
             }
         };
 
         btn.onclick = () => {
-            status.innerText = "VIRTUALIZING...";
+            if (typeof fengari === 'undefined') return alert("Library not loaded yet!");
             
+            status.innerText = "GENERATING V-TABLES...";
             const reader = new FileReader();
+            
             reader.onload = (e) => {
-                // We use requestAnimationFrame to prevent the browser from freezing
-                requestAnimationFrame(() => {
-                    try {
-                        const L = fengari.L;
-                        fengari.load(document.getElementById('compiler-logic').innerHTML)(L);
-                        fengari.lua.lua_getglobal(L, "Virtualize");
-                        fengari.lua.lua_pushstring(L, e.target.result);
-                        fengari.lua.lua_call(L, 1, 1);
-                        const result = fengari.lua.lua_tostring(L, -1);
-                        
-                        const blob = new Blob([result], { type: 'text/plain' });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = "obfuscated.lua";
-                        a.click();
-                        
-                        status.innerText = "DOWNLOAD STARTED";
-                    } catch (err) {
-                        status.innerText = "LUA ERROR";
-                        console.error(err);
+                try {
+                    const L = fengari.L;
+                    const luaSource = document.getElementById('lua-logic').innerHTML;
+                    
+                    fengari.load(luaSource)(L);
+                    fengari.lua.lua_getglobal(L, "Virtualize");
+                    fengari.lua.lua_pushstring(L, e.target.result);
+                    
+                    if (fengari.lua.lua_pcall(L, 1, 1, 0) !== 0) {
+                        throw new Error(fengari.lua.lua_tostring(L, -1));
                     }
-                });
+                    
+                    const result = fengari.lua.lua_tostring(L, -1);
+                    
+                    const blob = new Blob([result], { type: 'text/plain' });
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = "zentro_protected.lua";
+                    a.click();
+                    
+                    status.innerText = "PROTECTION DEPLOYED";
+                } catch (err) {
+                    status.innerText = "VM FAULT: CHECK LOGS";
+                    console.error(err);
+                }
             };
             reader.readAsText(input.files[0]);
         };
