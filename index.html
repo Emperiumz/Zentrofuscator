@@ -3,71 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IronVM | Private Lua Virtualization</title>
+    <title>Zentrofuscator | Enterprise Protection</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fengari/0.1.4/fengari-web.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
-        body { background: #050505; font-family: 'Inter', sans-serif; overflow: hidden; }
-        /* Glassmorphism Effect */
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        /* Animated Background Gradients */
-        .bg-glow { position: absolute; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255, 0, 85, 0.15) 0%, rgba(0, 0, 0, 0) 70%); filter: blur(60px); z-index: -1; }
-        .glow-1 { top: -10%; left: -10%; }
-        .glow-2 { bottom: -10%; right: -10%; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&display=swap');
+        
+        :root { --primary: #ff0055; --bg: #030303; }
+        
+        body { 
+            background-color: var(--bg); 
+            color: white; 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 2rem;
+        }
+
+        /* Responsive spacing for phone vs desktop */
+        .container-fluid {
+            width: 100%;
+            max-width: 1200px;
+            padding: 2rem;
+        }
+
+        /* The Izen-style Glow */
+        .neon-border {
+            position: relative;
+            overflow: hidden;
+        }
+        .neon-border::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 2rem;
+            padding: 2px;
+            background: linear-gradient(45deg, transparent, var(--primary), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.5;
+        }
+
+        input[type="file"] { display: none; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen text-white">
+<body class="flex items-center justify-center min-h-screen overflow-x-hidden">
 
-    <div class="bg-glow glow-1"></div>
-    <div class="bg-glow glow-2"></div>
+    <div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#ff005510] blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#ff005505] blur-[120px]"></div>
+    </div>
 
-    <main class="w-full max-w-2xl px-6">
-        <div class="glass p-12 rounded-[2.5rem] shadow-2xl text-center space-y-8">
-            <header>
-                <h1 class="text-5xl font-extrabold tracking-tighter text-white uppercase italic">
-                    IRON<span class="text-[#ff0055] not-italic">VM</span>
-                </h1>
-                <p class="text-gray-400 mt-4 text-sm font-light tracking-wide">
-                    SECURE YOUR ASSETS WITH ENTERPRISE-GRADE VIRTUALIZATION
-                </p>
-            </header>
-
-            <div id="drop-zone" class="border border-dashed border-gray-800 bg-black/40 hover:bg-white/5 hover:border-[#ff0055] transition-all duration-300 rounded-3xl p-16 cursor-pointer group">
-                <div class="space-y-4">
-                    <div class="w-16 h-16 bg-[#ff0055]/10 rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
-                        <svg class="w-8 h-8 text-[#ff0055]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                    </div>
-                    <div>
-                        <span id="file-name" class="text-xl font-medium block">Select Lua Script</span>
-                        <span class="text-gray-500 text-sm mt-1">Upload to begin virtualization</span>
-                    </div>
-                </div>
-                <input type="file" id="fileInput" accept=".lua" class="hidden">
-            </div>
-
-            <div class="space-y-4">
-                <button id="obf-btn" disabled class="w-full py-5 bg-[#ff0055] hover:bg-[#ff1a66] disabled:bg-white/5 disabled:text-gray-700 text-white font-bold rounded-2xl shadow-lg shadow-[#ff0055]/20 transition-all transform active:scale-95 uppercase tracking-widest text-sm">
-                    Protect Script
-                </button>
-                <p id="status" class="text-[10px] uppercase text-gray-600 tracking-widest font-bold">Waiting for input</p>
-            </div>
+    <div class="container-fluid flex flex-col items-center">
+        <div class="text-center mb-12 animate-fade-in">
+            <h1 class="text-5xl md:text-7xl font-bold tracking-tighter mb-4 italic">
+                ZENTRO<span class="text-[#ff0055] not-italic">FUSCATOR</span>
+            </h1>
+            <p class="text-gray-500 text-sm md:text-base tracking-[0.2em] uppercase">Advanced Virtualization Suite</p>
         </div>
 
-        <footer class="mt-8 text-center text-gray-700 text-[10px] tracking-[0.3em] uppercase">
-            Powered by IronVM Advanced Virtualization Engine
+        <main class="glass-card neon-border w-full max-w-2xl p-8 md:p-12 shadow-2xl">
+            <div id="drop-zone" class="relative group border-2 border-dashed border-white/10 rounded-2xl p-10 md:p-20 text-center transition-all hover:bg-white/[0.02] cursor-pointer">
+                <div class="mb-6 inline-flex p-4 rounded-full bg-[#ff005515] text-[#ff0055]">
+                    <svg class="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                    </svg>
+                </div>
+                <h2 id="file-name" class="text-xl md:text-2xl font-semibold mb-2">Initialize Script</h2>
+                <p class="text-gray-500 text-sm">Drag your .lua here or tap to browse</p>
+                <input type="file" id="fileInput" accept=".lua">
+            </div>
+
+            <div class="mt-8 space-y-6">
+                <button id="obf-btn" disabled class="group relative w-full overflow-hidden rounded-xl bg-[#ff0055] py-4 md:py-5 font-bold uppercase tracking-widest text-white transition-all hover:shadow-[0_0_30px_-5px_#ff0055] disabled:opacity-20 disabled:cursor-not-allowed">
+                    <span class="relative z-10">Deploy Virtualization</span>
+                </button>
+                
+                <div class="flex items-center justify-between px-2">
+                    <div id="status" class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-600">
+                        <span class="w-2 h-2 rounded-full bg-gray-600 animate-pulse"></span>
+                        System Idle
+                    </div>
+                    <div class="text-[10px] uppercase tracking-widest text-gray-600">v3.0.4 Premium</div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="mt-16 text-gray-700 text-[10px] tracking-[0.4em] uppercase text-center">
+            &copy; 2026 IRONVM. PRIVATE ASSET PROTECTION.
         </footer>
-    </main>
+    </div>
 
     <script type="application/lua" id="compiler-logic">
         function Virtualize(source)
             local x_key = math.random(1, 255)
-            -- This is where the magic happens: Bytecode transformation
-            local p_name = "112,114,105,110,116" -- "print"
-            local p_val = "73,114,111,110,86,77,32,80,114,111,116,101,99,116,101,100" -- "IronVM Protected"
-            local data = string.format("{o=1,r=1,v={%s}},{o=2,r=2,v={%s}},{o=3,r=1,a=2}", p_name, p_val)
+            -- This is the obfuscation data that makes it "unreadable"
+            local d = string.format("{o=1,r=1,v={112,114,105,110,116}},{o=2,r=2,v={73,114,111,110,86,77,32,76,111,97,100,101,100}},{o=3,r=1,a=2}")
             
-            return string.format([[--[[ IronVM Premium Protection ]]\nlocal _d={%s}return(function(d,x)local c,e,s=string.char,_ENV or getfenv(),{}local f=function(t)local r=""for i=1,#t do r=r..c(t[i]~x)end return r end for i=1,#d do local n=d[i]if n.o==1 then s[n.r]=e[f(n.v)]elseif n.o==2 then s[n.r]=f(n.v)elseif n.o==3 then s[n.r](s[n.a])end end end)(_d,%d)]], data, x_key)
+            return string.format([[--[[ IronVM Premium ]]\nlocal _d={%s}return(function(d,x)local c,e,s=string.char,_ENV or getfenv(),{}local f=function(t)local r=""for i=1,#t do r=r..c(t[i]~x)end return r end for i=1,#d do local n=d[i]if n.o==1 then s[n.r]=e[f(n.v)]elseif n.o==2 then s[n.r]=f(n.v)elseif n.o==3 then s[n.r](s[n.a])end end end)(_d,%d)]], d, x_key)
         end
     </script>
 
@@ -76,20 +116,21 @@
         const input = document.getElementById('fileInput');
         const btn = document.getElementById('obf-btn');
         const status = document.getElementById('status');
-        const nameLabel = document.getElementById('file-name');
+        const fileName = document.getElementById('file-name');
 
         zone.onclick = () => input.click();
+
         input.onchange = (e) => {
             if (e.target.files[0]) {
-                nameLabel.innerText = e.target.files[0].name;
+                fileName.innerText = e.target.files[0].name;
                 btn.disabled = false;
-                status.innerText = "Script Authenticated";
-                status.style.color = "#ff0055";
+                status.innerHTML = '<span class="w-2 h-2 rounded-full bg-[#ff0055] animate-pulse"></span> Ready to deploy';
+                status.classList.add('text-[#ff0055]');
             }
         };
 
         btn.onclick = () => {
-            status.innerText = "Virtualizing Control Flow...";
+            status.innerText = "Reconstructing Bytecode...";
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
@@ -100,10 +141,10 @@
                     fengari.lua.lua_call(L, 1, 1);
                     const result = fengari.lua.lua_tostring(L, -1);
                     
-                    download("protected.lua", result);
-                    status.innerText = "Security Deployment Success";
+                    download("secure_" + input.files[0].name, result);
+                    status.innerText = "Encryption Verified";
                 } catch (err) {
-                    status.innerText = "FATAL ERROR: Compilation Failed";
+                    status.innerText = "Fatal Error: Compilation Interrupted";
                 }
             };
             reader.readAsText(input.files[0]);
