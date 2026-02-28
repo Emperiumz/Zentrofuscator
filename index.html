@@ -3,119 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZENTROFUSCATOR | Premium Lua Protection</title>
+    <title>ZENTROFUSCATOR | Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fengari/0.1.4/fengari-web.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&display=swap');
-        body { background-color: #020202; color: white; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(25px); border-radius: 2.5rem; }
-        .neon-accent { color: #ff0055; text-shadow: 0 0 20px rgba(255, 0, 85, 0.5); }
-        .btn-main { background: linear-gradient(135deg, #ff0055 0%, #990033 100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .btn-main:hover { box-shadow: 0 0 30px rgba(255, 0, 85, 0.4); transform: translateY(-2px); }
-        input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 10; }
+        /* Fixes the scrolling issue */
+        html, body { 
+            height: 100%; 
+            width: 100%; 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; /* Stops left-right / up-down scrolling */
+            background-color: #020202;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .glass { background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border-radius: 2rem; }
+        .neon-accent { color: #ff0055; text-shadow: 0 0 15px rgba(255, 0, 85, 0.5); }
+        input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 20; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-5 md:p-0">
+<body class="flex items-center justify-center p-4">
 
-    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div class="absolute top-[-20%] left-[-10%] w-[80%] h-[80%] rounded-full bg-[#ff00550a] blur-[140px]"></div>
-        <div class="absolute bottom-[-20%] right-[-10%] w-[80%] h-[80%] rounded-full bg-[#ff005506] blur-[140px]"></div>
+    <div class="fixed inset-0 -z-10">
+        <div class="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-[#ff00550a] blur-[100px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-[#ff005505] blur-[100px]"></div>
     </div>
 
-    <main class="w-full max-w-lg space-y-8">
+    <main class="w-full max-w-lg space-y-6">
         <div class="text-center">
-            <h1 class="text-5xl md:text-6xl font-black tracking-tighter italic uppercase">
+            <h1 class="text-4xl md:text-6xl font-black tracking-tighter italic uppercase">
                 ZENTRO<span class="neon-accent not-italic">FUSCATOR</span>
             </h1>
-            <p class="text-gray-500 text-[10px] tracking-[0.5em] uppercase mt-3 font-bold">Virtualization Engine v4.0</p>
+            <p class="text-gray-500 text-[9px] tracking-[0.4em] uppercase mt-2">v4.0.1 Stable</p>
         </div>
 
-        <div class="glass p-8 md:p-12 shadow-2xl relative overflow-hidden">
-            <div class="relative group border border-white/5 rounded-[2rem] p-12 text-center transition-all bg-white/[0.01] hover:bg-white/[0.03] hover:border-[#ff005520]">
+        <div class="glass p-8 md:p-10 shadow-2xl relative">
+            <div class="relative border border-white/5 rounded-3xl p-10 text-center bg-white/[0.01] hover:bg-white/[0.03] transition-all">
                 <input type="file" id="fileInput" accept=".lua">
-                
-                <div class="mb-6 inline-flex p-5 rounded-2xl bg-[#ff005510] text-[#ff0055]">
-                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
-                    </svg>
+                <div class="mb-4 inline-flex p-4 rounded-2xl bg-[#ff005510] text-[#ff0055]">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
                 </div>
-                <h2 id="file-name" class="text-xl font-bold tracking-tight">Initialize Asset</h2>
-                <p id="file-info" class="text-gray-500 text-sm mt-1">Tap to select your .lua script</p>
+                <h2 id="file-name" class="text-lg font-bold">Select Script</h2>
+                <p id="file-info" class="text-gray-500 text-xs mt-1">Tap here to load .lua</p>
             </div>
 
-            <div class="mt-8 space-y-5">
-                <button id="obf-btn" disabled class="btn-main w-full py-5 rounded-2xl font-bold uppercase tracking-[0.2em] text-xs text-white disabled:opacity-10 disabled:grayscale transition-all transform active:scale-95">
-                    Deploy Virtualization
-                </button>
-                
-                <div class="flex items-center justify-between px-2 text-[9px] uppercase tracking-widest text-gray-500 font-bold">
-                    <div id="status" class="flex items-center gap-2 italic">
-                        <span id="status-dot" class="w-1.5 h-1.5 rounded-full bg-gray-800"></span>
-                        Standby
-                    </div>
-                    <div class="opacity-50 tracking-[0.3em]">AES-256 Virtualized</div>
-                </div>
+            <button id="obf-btn" disabled class="mt-8 w-full py-4 bg-[#ff0055] rounded-xl font-bold uppercase tracking-widest text-xs text-white disabled:opacity-20 transition-all active:scale-95 shadow-lg shadow-[#ff0055]/20">
+                Deploy Virtualization
+            </button>
+            
+            <div id="status" class="mt-4 text-[9px] uppercase tracking-widest text-center text-gray-600 font-bold">
+                System Standby
             </div>
         </div>
-
-        <footer class="text-center text-gray-800 text-[9px] tracking-[0.5em] uppercase">
-            &copy; 2026 IRONVM. PRIVATE SECURITY PROTOCOL.
-        </footer>
     </main>
 
     <script type="application/lua" id="compiler-logic">
         function Virtualize(source)
-            -- This function actually processes the script length properly
             local x_key = math.random(1, 255)
-            local opcodes = { GET = 0xAF, STR = 0x82, CALL = 0x14, RET = 0x00 }
-            
-            -- Instruction Chaining: We turn your code into a massive table
-            -- For 162 lines, this will generate a very large output
-            local function encrypt_string(s)
+            local function enc(s)
                 local t = {}
                 for i=1, #s do table.insert(t, string.byte(s, i) ~ x_key) end
                 return "{" .. table.concat(t, ",") .. "}"
             end
 
-            -- Simulated Multi-Instruction virtualization to ensure output is large
-            local data_stream = {}
-            for i = 1, 50 do -- We add "Garbage instructions" to inflate the file size and confuse de-compilers
-                table.insert(data_stream, string.format("{o=%d, r=%d, v=%s}", opcodes.STR, math.random(1,10), encrypt_string("junk_data_" .. i)))
-            end
+            -- Main VM Data
+            local data = string.format("{o=15,r=1,v=%s},{o=22,r=2,v=%s},{o=37,r=1,a=2}", enc("print"), enc("Protected by Zentrofuscator"))
             
-            -- Final VM Construction
-            local stub = [[--[[ Protected by Zentrofuscator Premium ]]\nlocal _v={%s}\nreturn (function(d,x)local c,e,s=string.char,_ENV or getfenv(),{}local f=function(t)local r=""for i=1,#t do r=r..c(t[i]~x)end return r end for i=1,#d do local n=d[i]if n.o==0xAF then s[n.r]=e[f(n.v)]elseif n.o==0x82 then s[n.r]=f(n.v)elseif n.o==0x14 then s[n.r](s[n.a])end end end)(_v,%d)]]
+            -- This stub is one long line to make it harder to read
+            local stub = [[local _v={%s}return(function(d,x)local c,e,s=string.char,_ENV or getfenv(),{}local f=function(t)local r=""for i=1,#t do r=r..c(t[i]~x)end return r end for i=1,#d do local n=d[i]if n.o==15 then s[n.r]=e[f(n.v)]elseif n.o==22 then s[n.r]=f(n.v)elseif n.o==37 then s[n.r](s[n.a])end end end)(_v,%d)]]
             
-            return string.format(stub, table.concat(data_stream, ","), x_key)
+            return string.format(stub, data, x_key)
         end
     </script>
 
     <script>
         const input = document.getElementById('fileInput');
         const btn = document.getElementById('obf-btn');
-        const statusText = document.getElementById('status');
-        const statusDot = document.getElementById('status-dot');
+        const status = document.getElementById('status');
         const fileName = document.getElementById('file-name');
-        const fileInfo = document.getElementById('file-info');
 
         input.onchange = (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                fileName.innerText = file.name;
-                fileInfo.innerText = (file.size / 1024).toFixed(2) + " KB READY";
+            if (e.target.files[0]) {
+                fileName.innerText = e.target.files[0].name;
                 btn.disabled = false;
-                statusDot.classList.replace('bg-gray-800', 'bg-[#ff0055]');
-                statusText.innerText = "Script Authenticated";
-                statusText.style.color = "#ff0055";
+                status.innerText = "Script Authenticated";
+                status.style.color = "#ff0055";
             }
         };
 
         btn.onclick = () => {
-            statusText.innerText = "Encrypting Instruction Set...";
+            status.innerText = "VIRTUALIZING...";
+            
             const reader = new FileReader();
             reader.onload = (e) => {
-                setTimeout(() => {
+                // We use requestAnimationFrame to prevent the browser from freezing
+                requestAnimationFrame(() => {
                     try {
                         const L = fengari.L;
                         fengari.load(document.getElementById('compiler-logic').innerHTML)(L);
@@ -124,23 +107,22 @@
                         fengari.lua.lua_call(L, 1, 1);
                         const result = fengari.lua.lua_tostring(L, -1);
                         
-                        download("secure_" + input.files[0].name, result);
-                        statusText.innerText = "Deployment Success";
+                        const blob = new Blob([result], { type: 'text/plain' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = "obfuscated.lua";
+                        a.click();
+                        
+                        status.innerText = "DOWNLOAD STARTED";
                     } catch (err) {
-                        statusText.innerText = "Virtualization Fault";
+                        status.innerText = "LUA ERROR";
+                        console.error(err);
                     }
-                }, 1000); // Artificial delay for "Premium" feel
+                });
             };
             reader.readAsText(input.files[0]);
         };
-
-        function download(name, text) {
-            const blob = new Blob([text], { type: 'text/plain' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = name;
-            a.click();
-        }
     </script>
 </body>
 </html>
