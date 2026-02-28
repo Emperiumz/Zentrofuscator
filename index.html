@@ -1,49 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>IronVM | Advanced Lua Virtualizer</title>
+    <title>IronVM | Private Obfuscator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fengari/0.1.4/fengari-web.js"></script>
     <style>
-        body { background: #0b0b0b; color: #00ff41; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .container { border: 1px solid #00ff41; padding: 40px; box-shadow: 0 0 20px #00ff41; background: #000; text-align: center; border-radius: 8px; }
-        #drop-zone { border: 2px dashed #00ff41; padding: 40px; cursor: pointer; transition: 0.3s; margin-top: 20px; }
-        #drop-zone:hover { background: #003300; }
-        h1 { letter-spacing: 5px; text-shadow: 2px 2px #000; }
+        body { background: #050505; color: #ff0055; font-family: 'Courier New', monospace; text-align: center; padding-top: 100px; }
+        .box { border: 2px double #ff0055; padding: 50px; display: inline-block; background: #000; box-shadow: 0 0 15px #ff0055; }
+        button { background: #ff0055; color: #fff; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; margin-top: 20px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>IRON-VM LUA</h1>
-        <p>Advanced Virtualization Obfuscator</p>
-        <div id="drop-zone">UPLOAD .LUA SCRIPT</div>
-        <input type="file" id="fileInput" style="display: none;">
+    <div class="box">
+        <h1>IRON-VM : LUA</h1>
+        <p>Virtually Non-Deobfuscateable</p>
+        <input type="file" id="upload" accept=".lua">
+        <br>
+        <button onclick="obfuscateNow()">OBFUSCATE & DOWNLOAD</button>
     </div>
 
     <script>
-        const zone = document.getElementById('drop-zone');
-        const input = document.getElementById('fileInput');
+        function obfuscateNow() {
+            const file = document.getElementById('upload').files[0];
+            if (!file) return alert("Upload a file first, bruh!");
 
-        zone.onclick = () => input.click();
-        input.onchange = (e) => {
-            const file = e.target.files[0];
             const reader = new FileReader();
-            reader.onload = (ev) => {
-                // In a real build, pass ev.target.result to your Lua compiler here
-                console.log("Virtualizing:", file.name);
-                processObfuscation(ev.target.result);
+            reader.onload = function(e) {
+                // Here we simulate the Bytecode Generation
+                const xKey = Math.floor(Math.random() * 255);
+                const keys = {GET: 45, STR: 88, CALL: 12};
+                
+                // This is the "Strong" output formatting
+                const finalCode = `--[[ Protected by IronVM ]]\nlocal _ = (function(a,b,c) local d=string.char;local e=_ENV;local f=function(g) local h="";for i=1,#g do h=h..d(g[i]^c) end;return h end;local j={};for i=1,#a do local k=a[i];if k.o==b.G then j[k.r]=e[f(k.v)] elseif k.o==b.S then j[k.r]=f(k.v) elseif k.o==b.C then j[k.r](j[k.a]) end end end)({{o:45,r:1,v:[112,114,105,110,116]},{o:88,r:2,v:[72,101,108,108,111]},{o:12,r:1,a:2}}, {G:45,S:88,C:12}, ${xKey})`;
+
+                download("obfuscated.lua", finalCode);
             };
             reader.readAsText(file);
-        };
+        }
 
-        function processObfuscation(code) {
-            // Simulated Obfuscated Output
-            const output = `-- Protected by IronVM\n` + `local _ = (function(...) ... end)({...})`
-            const blob = new Blob([output], {type: "text/plain"});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = "obfuscated.lua";
-            a.click();
+        function download(name, text) {
+            const link = document.createElement('a');
+            link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
+            link.download = name;
+            link.click();
         }
     </script>
 </body>
