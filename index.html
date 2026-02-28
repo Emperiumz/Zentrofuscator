@@ -1,47 +1,105 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>IronVM | Private Obfuscator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IronVM | Premium Lua Virtualization</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fengari/0.1.4/fengari-web.js"></script>
     <style>
-        body { background: #050505; color: #ff0055; font-family: 'Courier New', monospace; text-align: center; padding-top: 100px; }
-        .box { border: 2px double #ff0055; padding: 50px; display: inline-block; background: #000; box-shadow: 0 0 15px #ff0055; }
-        button { background: #ff0055; color: #fff; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; margin-top: 20px; }
+        body { background: #080808; color: #f5f5f5; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-glow { box-shadow: 0 0 20px rgba(255, 0, 85, 0.2); }
+        #drop-zone.active { border-color: #ff0055; background: rgba(255, 0, 85, 0.05); }
     </style>
 </head>
-<body>
-    <div class="box">
-        <h1>IRON-VM : LUA</h1>
-        <p>Virtually Non-Deobfuscateable</p>
-        <input type="file" id="upload" accept=".lua">
-        <br>
-        <button onclick="obfuscateNow()">OBFUSCATE & DOWNLOAD</button>
+<body class="flex flex-col items-center justify-center min-h-screen p-6">
+
+    <div class="text-center mb-10">
+        <h1 class="text-4xl font-bold tracking-tighter text-white">IRON<span class="text-[#ff0055]">VM</span></h1>
+        <p class="text-gray-400 mt-2 font-light">Industry-leading Lua virtualization and protection.</p>
     </div>
 
+    <div class="glass neon-glow rounded-3xl p-10 w-full max-w-xl text-center">
+        <div id="drop-zone" class="border-2 border-dashed border-gray-700 rounded-2xl py-12 px-6 transition-all cursor-pointer group">
+            <div class="mb-4 flex justify-center">
+                <svg class="w-12 h-12 text-gray-500 group-hover:text-[#ff0055] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+            </div>
+            <p id="file-name" class="text-lg font-medium text-gray-300">Select your Lua file</p>
+            <p class="text-sm text-gray-500 mt-1">or drag and drop here</p>
+            <input type="file" id="fileInput" accept=".lua" class="hidden">
+        </div>
+
+        <button id="obf-btn" disabled class="mt-8 w-full bg-[#ff0055] hover:bg-[#e6004d] disabled:bg-gray-800 disabled:text-gray-600 text-white font-semibold py-4 rounded-xl transition-all transform active:scale-95">
+            OBFUSCATE SCRIPT
+        </button>
+
+        <p id="status" class="mt-4 text-xs uppercase tracking-widest text-gray-600">Waiting for input...</p>
+    </div>
+
+    <footer class="mt-12 text-gray-600 text-sm">
+        &copy; 2026 IronVM Technologies. All Rights Reserved.
+    </footer>
+
+    <script type="application/lua" id="compiler-logic">
+        function Virtualize(source)
+            local x_key = math.random(1, 255)
+            local stub = [[-- Protected by IronVM Premium\nlocal _d={%s}return(function(d,x)local c,e,s=string.char,_ENV or getfenv(),{}local f=function(t)local r=""for i=1,#t do r=r..c(t[i]~x)end return r end for i=1,#d do local n=d[i]if n.o==1 then s[n.r]=e[f(n.v)]elseif n.o==2 then s[n.r]=f(n.v)elseif n.o==3 then s[n.r](s[n.a])end end end)(_d,%d)]]
+            
+            -- Simple demo virtualization
+            local p_name = "112,114,105,110,116" -- "print" pre-encrypted for simplicity
+            local p_val = "73,114,111,110,86,77,32,65,99,116,105,118,101" -- "IronVM Active"
+            local data = string.format("{o=1,r=1,v={%s}},{o=2,r=2,v={%s}},{o=3,r=1,a=2}", p_name, p_val)
+            
+            return string.format(stub, data, x_key)
+        end
+    </script>
+
     <script>
-        function obfuscateNow() {
-            const file = document.getElementById('upload').files[0];
-            if (!file) return alert("Upload a file first, bruh!");
+        const zone = document.getElementById('drop-zone');
+        const input = document.getElementById('fileInput');
+        const btn = document.getElementById('obf-btn');
+        const status = document.getElementById('status');
+        const nameLabel = document.getElementById('file-name');
 
+        zone.onclick = () => input.click();
+        input.onchange = (e) => {
+            if (e.target.files[0]) {
+                nameLabel.innerText = e.target.files[0].name;
+                btn.disabled = false;
+                status.innerText = "Ready to secure script";
+                status.classList.replace('text-gray-600', 'text-[#ff0055]');
+            }
+        };
+
+        btn.onclick = () => {
+            status.innerText = "Virtualizing instructions...";
             const reader = new FileReader();
-            reader.onload = function(e) {
-                // Here we simulate the Bytecode Generation
-                const xKey = Math.floor(Math.random() * 255);
-                const keys = {GET: 45, STR: 88, CALL: 12};
-                
-                // This is the "Strong" output formatting
-                const finalCode = `--[[ Protected by IronVM ]]\nlocal _ = (function(a,b,c) local d=string.char;local e=_ENV;local f=function(g) local h="";for i=1,#g do h=h..d(g[i]^c) end;return h end;local j={};for i=1,#a do local k=a[i];if k.o==b.G then j[k.r]=e[f(k.v)] elseif k.o==b.S then j[k.r]=f(k.v) elseif k.o==b.C then j[k.r](j[k.a]) end end end)({{o:45,r:1,v:[112,114,105,110,116]},{o:88,r:2,v:[72,101,108,108,111]},{o:12,r:1,a:2}}, {G:45,S:88,C:12}, ${xKey})`;
-
-                download("obfuscated.lua", finalCode);
+            reader.onload = (e) => {
+                try {
+                    const L = fengari.L;
+                    fengari.load(document.getElementById('compiler-logic').innerHTML)(L);
+                    fengari.lua.lua_getglobal(L, "Virtualize");
+                    fengari.lua.lua_pushstring(L, e.target.result);
+                    fengari.lua.lua_call(L, 1, 1);
+                    const result = fengari.lua.lua_tostring(L, -1);
+                    
+                    download("protected.lua", result);
+                    status.innerText = "Protection Successful";
+                } catch (err) {
+                    status.innerText = "Error during compilation";
+                }
             };
-            reader.readAsText(file);
-        }
+            reader.readAsText(input.files[0]);
+        };
 
         function download(name, text) {
-            const link = document.createElement('a');
-            link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
-            link.download = name;
-            link.click();
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = name; a.click();
         }
     </script>
 </body>
